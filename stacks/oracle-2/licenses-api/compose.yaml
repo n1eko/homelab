@@ -1,0 +1,9 @@
+services:
+  licenses-api:
+    image: registry.n1eko.com/licenses-api:1.0.1
+    container_name: licenses-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
