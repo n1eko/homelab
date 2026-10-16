@@ -1,0 +1,26 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.10.1
+    container_name: homeassistant
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /mnt/docker/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+  mosquitto:
+    image: eclipse-mosquitto:2.1.2-alpine
+    container_name: mosquitto
+    environment:
+      - TZ=Europe/Madrid
+    volumes:
+      - /mnt/docker/mosquitto/config:/mosquitto/config
+      - /mnt/docker/mosquitto/data:/mosquitto/data
+      - /mnt/docker/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+    restart: unless-stopped
