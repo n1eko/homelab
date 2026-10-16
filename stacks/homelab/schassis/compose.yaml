@@ -56,8 +56,3 @@ services:
       ofelia.job-run.wallapop-scrapper.network: "schassis_default"
       ofelia.job-run.wallapop-scrapper.volume: "/etc/komodo/stacks/schassis/stacks/homelab/schassis/config/wallapop-scrapper.yml:/config/application.yml:ro"
       ofelia.job-run.wallapop-scrapper.environment: "SCHASSIS_POSTGRES_PASSWORD=${SCHASSIS_POSTGRES_PASSWORD}"
-
-  image-renewall:
-    image: localhost:32080/schassis-image-renewall:1.1.0
-    profiles: ["manual"]
-    restart: "no"
