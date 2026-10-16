@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Blocks commits that contain secrets. This repo is public: a pushed secret is a leaked secret.
+#   1. gitleaks: known token formats (API keys, private keys, JWTs...)
+#   2. .git/info/secret-denylist: literal values of our own passwords, one per line.
+#      Local only, never committed. Catches random passwords gitleaks can't recognise.
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null; then
+  echo "pre-commit: gitleaks is not installed, refusing to commit (sudo pacman -S gitleaks)" >&2
+  exit 1
+fi
+gitleaks git --pre-commit --staged --redact --no-banner
+
+denylist="$(git rev-parse --git-dir)/info/secret-denylist"
+if [ -s "$denylist" ]; then
+  leaked=0
+  while IFS= read -r -d '' file; do
+    if git show ":$file" | grep -qF -f "$denylist"; then
+      echo "pre-commit: $file contains a value from secret-denylist" >&2
+      leaked=1
+    fi
+  done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+  [ "$leaked" -eq 0 ] || exit 1
+fi

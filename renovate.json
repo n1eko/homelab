@@ -1,0 +1,96 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits"
+  ],
+  "hostRules": [
+    {
+      "matchHost": "https://registry.n1eko.com/",
+      "username": "n1eko",
+      "password": "{{ secrets.REGISTRY_PASSWORD }}"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "linuxserver.io tags carry a build suffix (-lsNNN) that default Docker versioning treats as a fixed variant",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/radarr",
+        "lscr.io/linuxserver/sonarr",
+        "lscr.io/linuxserver/prowlarr"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)-ls(?<revision>\\d+)$"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/bazarr"
+      ],
+      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-ls(?<build>\\d+)$"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/qbittorrent"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)_v[\\d.]+-ls(?<build>\\d+)$"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/jellyfin"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.?(?<patch>\\d+)?ubu\\d+-ls(?<build>\\d+)$"
+    },
+    {
+      "description": "Stateless exporters: safe to merge minor/patch bumps without review",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "prom/node-exporter",
+        "quay.io/prometheus/node-exporter",
+        "prometheuscommunity/smartctl-exporter",
+        "prometheuscommunity/postgres-exporter",
+        "danielqsj/kafka-exporter",
+        "ghcr.io/martabal/qbittorrent-exporter",
+        "ghcr.io/justwatchcom/sql_exporter",
+        "povilasid/p110-exporter"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Databases and apps with their own migrations: never jump a major version automatically",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "postgres",
+        "docker.io/library/postgres",
+        "mongo",
+        "redis",
+        "docker.io/library/redis",
+        "ghcr.io/immich-app/postgres",
+        "docker.io/valkey/valkey"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    }
+  ]
+}
