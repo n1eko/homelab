@@ -1,0 +1,16 @@
+services:
+  backup:
+    image: docker:29.9.0-cli
+    container_name: backup
+    restart: always
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache openssh-client >/dev/null
+        echo '30 1 * * * /scripts/dump.sh > /proc/1/fd/1 2>&1' | crontab -
+        exec crond -f -l 8
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dump.sh:/scripts/dump.sh:ro
+      - /mnt/backups:/backups
+      - /mnt/docker/backup/ssh:/ssh:ro
