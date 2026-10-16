@@ -1,0 +1,15 @@
+services:
+  mongodb:
+    image: mongo:8.3
+    container_name: schassis-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: n1eko
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
