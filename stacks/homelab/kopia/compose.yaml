@@ -1,0 +1,27 @@
+services:
+  kopia:
+    image: kopia/kopia:0.23.1
+    hostname: Hostname
+    container_name: Kopia
+    restart: unless-stopped
+    ports:
+      - 51515:51515
+    command:
+      - server
+      - start
+      - --disable-csrf-token-checks
+      - --insecure
+      - --address=0.0.0.0:51515
+      - --server-username=N1EKO
+      - --server-password=${KOPIA_SERVER_PASSWORD}
+    environment:
+      KOPIA_PASSWORD: ${KOPIA_REPOSITORY_PASSWORD}
+      USER: "N1eko"
+    volumes:
+      - /mnt/docker/kopia/config:/app/config
+      - /mnt/docker/kopia/cache:/app/cache
+      - /mnt/docker/kopia/logs:/app/logs
+      - /mnt/tank:/data:ro
+      - /mnt/docker:/sources/docker:ro
+      - /mnt/backups:/sources/backups:ro
+      - /mnt/usb/kopia:/repository
