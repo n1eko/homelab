@@ -1,0 +1,12 @@
+services:
+  koblas:
+    image: proxy:100.0.4
+    container_name: koblas
+    restart: unless-stopped
+    ports:
+      - "100.106.222.107:1080:1080"
+    environment:
+      RUST_LOG: info
+      KOBLAS_LIMIT: 256
+      KOBLAS_NO_AUTHENTICATION: true
+      KOBLAS_ANONYMIZATION: true
