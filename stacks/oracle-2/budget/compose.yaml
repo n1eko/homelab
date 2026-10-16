@@ -1,0 +1,115 @@
+name: budget-tracker-prod
+
+x-logging: &default-logging
+  driver: 'json-file'
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  backend:
+    image: budget-backend:latest
+    pull_policy: never
+    restart: unless-stopped
+    networks: [budget-tracker]
+    expose: ['${APPLICATION_PORT:-8081}']
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      currency-rates-api: { condition: service_healthy }
+    env_file: .env
+    environment:
+      IS_SELF_HOST: 'true'
+      SYSTEM_DEMO_DISABLED: ${SYSTEM_DEMO_DISABLED:-true}
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:${APPLICATION_PORT:-8081}/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging: *default-logging
+
+  frontend:
+    image: budget-frontend:latest
+    pull_policy: never
+    restart: unless-stopped
+    networks:
+      budget-tracker:
+        aliases: [budget-tracker]
+    ports: ['${HTTP_PORT:-8080}:80']
+    depends_on:
+      backend: { condition: service_healthy }
+    environment:
+      IS_SELF_HOST: 'true'
+      API_HTTP: ${API_HTTP-}
+      BACKEND_URL: http://backend:${APPLICATION_PORT:-8081}
+      API_VER: ${API_VER:-/api/v1}
+      MCP_BASE_URL: ${MCP_BASE_URL:-}
+      POSTHOG_KEY: ${VITE_POSTHOG_KEY:-}
+      POSTHOG_HOST: ${VITE_POSTHOG_HOST:-}
+      LOGO_DEV_TOKEN: ${VITE_LOGO_DEV_TOKEN:-}
+      SENTRY_DSN: ${VITE_SENTRY_DSN:-}
+      SENTRY_RELEASE: ${VITE_SENTRY_RELEASE:-}
+      CSP_EXTRA_CONNECT: ${CSP_EXTRA_CONNECT:-}
+      CSP_EXTRA_FORM_ACTION: ${CSP_EXTRA_FORM_ACTION:-}
+      CSP_EXTRA_ANALYTICS: ${CSP_EXTRA_ANALYTICS:-}
+    logging: *default-logging
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    networks: [budget-tracker]
+    volumes: ['db_data:/var/lib/postgresql/data']
+    environment:
+      - POSTGRES_USER=${APPLICATION_DB_USERNAME}
+      - POSTGRES_PASSWORD=${APPLICATION_DB_PASSWORD}
+      - POSTGRES_DB=${APPLICATION_DB_DATABASE}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    networks: [budget-tracker]
+    volumes: ['redis_data:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  currency-rates-api:
+    image: budget-currency:latest
+    pull_policy: never
+    restart: unless-stopped
+    networks: [budget-tracker]
+    volumes: ['currency_rates_data:/app/data']
+    environment:
+      - DATABASE_URL=sqlite:/app/data/currency_rates.db?mode=rwc
+      - HOST=0.0.0.0
+      - PORT=8080
+      - DEFAULT_API_BASE=USD
+      - SEED_ON_STARTUP=true
+      - SYNC_ON_STARTUP=true
+      - 'SYNC_CRON=0 0 8,12,16,20 * * *'
+      - RUST_LOG=currency_rates=info,tower_http=info
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:8080/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging: *default-logging
+
+networks:
+  budget-tracker:
+    name: budget-tracker
+    driver: bridge
+
+volumes:
+  db_data:
+  redis_data:
+  currency_rates_data:
