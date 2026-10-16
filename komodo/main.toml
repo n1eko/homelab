@@ -456,6 +456,28 @@ executions = [
 
 ##
 
+[[procedure]]
+name = "Deploy repo changes"
+description = "Applies komodo/main.toml, then redeploys every stack whose files changed in the repo."
+tags = ["system"]
+config.schedule = "Every hour"
+
+[[procedure.config.stage]]
+name = "Sync resources"
+enabled = true
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "resource-sync", enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "Deploy changed stacks"
+enabled = true
+executions = [
+  { execution.type = "BatchDeployStackIfChanged", execution.params.pattern = "*", enabled = true }
+]
+
+##
+
 [[builder]]
 name = "local"
 [builder.config]
