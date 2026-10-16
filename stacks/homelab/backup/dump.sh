@@ -3,7 +3,7 @@
 # Dumps are uncompressed on purpose: Kopia compresses and deduplicates them across days.
 set -u
 status=0
-SSH="ssh -i /ssh/id_ed25519 -o UserKnownHostsFile=/ssh/known_hosts -o BatchMode=yes"
+SSH="ssh -T -i /ssh/id_ed25519 -o UserKnownHostsFile=/ssh/known_hosts -o BatchMode=yes"
 
 # Writes to a temp file first so Kopia never snapshots a half-written dump.
 dump() {
