@@ -20,6 +20,8 @@ dump() {
 }
 
 dump /backups/homelab/schassis.sql docker exec schassis-db sh -c 'pg_dumpall -U "$POSTGRES_USER"'
+# Komodo's database holds every stack secret (Komodo variables). See README.md to restore it.
+dump /backups/homelab/komodo-mongo.archive docker exec komodo-mongo-1 sh -c 'mongodump --archive --quiet -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin'
 # The remote side ignores the command and runs its forced dump script (see remote/).
 dump /backups/oracle-1/dumps.tar $SSH ubuntu@100.114.66.100
 dump /backups/oracle-2/dumps.tar $SSH ubuntu@100.106.222.107
