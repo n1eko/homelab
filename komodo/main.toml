@@ -1,0 +1,481 @@
+[[server]]
+name = "homelab"
+[server.config]
+address = "https://periphery:8120"
+enabled = true
+mem_warning = 90.0
+
+##
+
+[[server]]
+name = "oracle-1"
+[server.config]
+address = "https://100.114.66.100:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "oracle-2"
+[server.config]
+address = "https://100.106.222.107:8120"
+enabled = true
+
+##
+
+[[stack]]
+name = "assetto"
+[stack.config]
+server = "oracle-2"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-2/assetto"
+
+##
+
+[[stack]]
+name = "backup"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/backup"
+
+##
+
+[[stack]]
+name = "budget"
+[stack.config]
+server = "oracle-2"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-2/budget"
+environment = """
+NODE_ENV=production
+BETTER_AUTH_URL=https://oracle2.tail21300.ts.net
+AUTH_ORIGIN=https://oracle2.tail21300.ts.net
+APPLICATION_JWT_SECRET=[[BUDGET_JWT_SECRET]]
+APP_SESSION_ID_SECRET=[[BUDGET_SESSION_ID_SECRET]]
+BETTER_AUTH_SECRET=[[BUDGET_BETTER_AUTH_SECRET]]
+APPLICATION_DB_HOST=db
+APPLICATION_DB_PORT=5432
+APPLICATION_DB_USERNAME=budget_tracker
+APPLICATION_DB_PASSWORD=[[BUDGET_DB_PASSWORD]]
+APPLICATION_DB_DATABASE=budget_tracker
+APPLICATION_DB_DIALECT=postgres
+APPLICATION_REDIS_HOST=redis
+APPLICATION_HOST=100.106.222.107
+APPLICATION_PORT=27381
+HTTP_PORT=27380
+POLYGON_API_KEY=[[BUDGET_POLYGON_API_KEY]]
+COINGECKO_API_KEY=[[BUDGET_COINGECKO_API_KEY]]
+OPENAI_API_KEY=[[BUDGET_OPENAI_API_KEY]]
+ADMIN_USERS=[[BUDGET_ADMIN_USERS]]
+"""
+
+##
+
+[[stack]]
+name = "ddns"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/ddns"
+
+##
+
+[[stack]]
+name = "frigate"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/frigate"
+environment = """
+FRIGATE_RTSP_PASSWORD=[[FRIGATE_RTSP_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "gcups"
+[stack.config]
+server = "homelab"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/gcups"
+environment = """
+GCUPS_PASSWORD=[[GCUPS_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "home"
+[stack.config]
+server = "homelab"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/home"
+
+##
+
+[[stack]]
+name = "ingress"
+[stack.config]
+server = "oracle-1"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-1/ingress"
+environment = """
+INGRESS_BASIC_AUTH_USERS='[[INGRESS_BASIC_AUTH_USERS]]'
+"""
+
+##
+
+[[stack]]
+name = "kafka"
+[stack.config]
+server = "oracle-1"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-1/kafka"
+
+##
+
+[[stack]]
+name = "kopia"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/kopia"
+environment = """
+KOPIA_SERVER_PASSWORD=[[KOPIA_SERVER_PASSWORD]]
+KOPIA_REPOSITORY_PASSWORD=[[KOPIA_REPOSITORY_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "licences-api"
+[stack.config]
+server = "oracle-2"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-2/licenses-api"
+
+##
+
+[[stack]]
+name = "mealie"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/mealie"
+
+##
+
+[[stack]]
+name = "mongodb"
+[stack.config]
+server = "oracle-1"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-1/mongo"
+environment = """
+MONGO_ROOT_PASSWORD=[[MONGODB_ROOT_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "monitoring"
+[stack.config]
+server = "homelab"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/monitoring"
+environment = """
+ZOMBOID_RCON_PASSWORD=[[ZOMBOID_RCON_PASSWORD]]
+TAPO_EMAIL=[[TAPO_EMAIL]]
+TAPO_PASSWORD=[[TAPO_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "monitoring_oracle_1"
+[stack.config]
+server = "oracle-1"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-1/monitoring"
+environment = """
+SCHASSIS_POSTGRES_PASSWORD=[[SCHASSIS_POSTGRES_PASSWORD]]
+QBITTORRENT_API_KEY=[[QBITTORRENT_API_KEY]]
+"""
+
+##
+
+[[stack]]
+name = "monitoring_oracle_2"
+[stack.config]
+server = "oracle-2"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-2/monitoring"
+environment = """
+GRAFANA_PDC_TOKEN=[[GRAFANA_PDC_TOKEN]]
+"""
+
+##
+
+[[stack]]
+name = "photos"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/immich"
+environment = """
+UPLOAD_LOCATION=/mnt/tank/immich
+DB_DATA_LOCATION=/mnt/docker/immich-db
+IMMICH_VERSION=v3
+DB_USERNAME=immich
+DB_DATABASE_NAME=immich
+DB_PASSWORD=[[IMMICH_DB_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "proxy"
+[stack.config]
+server = "oracle-2"
+auto_pull = false
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-2/proxy"
+
+##
+
+[[stack]]
+name = "registry"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/registry"
+
+##
+
+[[stack]]
+name = "schassis"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/schassis"
+environment = """
+SCHASSIS_POSTGRES_PASSWORD=[[SCHASSIS_POSTGRES_PASSWORD]]
+MONGODB_ROOT_PASSWORD=[[MONGODB_ROOT_PASSWORD]]
+SCHASSIS_R2_ACCESS_KEY=[[SCHASSIS_R2_ACCESS_KEY]]
+SCHASSIS_R2_SECRET_KEY=[[SCHASSIS_R2_SECRET_KEY]]
+"""
+
+##
+
+[[stack]]
+name = "tv"
+[stack.config]
+server = "homelab"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/tv"
+environment = """
+HOMARR_SECRET_ENCRYPTION_KEY=[[HOMARR_SECRET_ENCRYPTION_KEY]]
+HARDCOVER_TOKEN=[[HARDCOVER_TOKEN]]
+"""
+
+##
+
+[[stack]]
+name = "vault"
+[stack.config]
+server = "oracle-1"
+poll_for_updates = true
+auto_update = true
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/oracle-1/vault"
+environment = """
+DOMAIN=https://vault.n1eko.com
+SIGNUPS_ALLOWED=false
+SMTP_HOST=smtp.zoho.com
+SMTP_PORT=465
+SMTP_SECURITY=force_tls
+SMTP_FROM=contacto@n1eko.com
+SMTP_USERNAME=contacto@n1eko.com
+SMTP_PASSWORD=[[VAULT_SMTP_PASSWORD]]
+"""
+
+##
+
+[[stack]]
+name = "zomboid"
+[stack.config]
+server = "homelab"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+run_directory = "stacks/homelab/zomboid"
+environment = """
+FORCEUPDATE=True
+LANG=en_EN.UTF-8
+NOSTEAM=False
+DEBUG=False
+MEMORY=6144m
+SERVERNAME=servertest1
+DISPLAYNAME=MyZomboidServer
+PUBLIC=False
+PORT=16261
+UDPPORT=16262
+STEAMPORT1=8766
+STEAMPORT2=8767
+STEAMVAC=True
+MODFOLDERS=workshop,steam,mods
+SOFTRESET=False
+ADMINUSERNAME=admin
+ADMINPASSWORD=[[ZOMBOID_ADMIN_PASSWORD]]
+PASSWORD=[[ZOMBOID_PASSWORD]]
+RCONPASSWORD=[[ZOMBOID_RCON_PASSWORD]]
+"""
+
+##
+
+[[build]]
+name = "budgetback"
+[build.config]
+builder = "oracle-2"
+image_name = "budget-backend"
+git_account = "n1eko"
+repo = "letehaha/budget-tracker"
+dockerfile_path = "self-hosting/backend/Dockerfile"
+
+##
+
+[[build]]
+name = "budgetcurrency"
+[build.config]
+builder = "oracle-2"
+image_name = "budget-currency"
+git_account = "n1eko"
+repo = "letehaha/currency-rates"
+
+##
+
+[[build]]
+name = "budgetfront"
+[build.config]
+builder = "oracle-2"
+image_name = "budget-frontend"
+git_account = "n1eko"
+repo = "letehaha/budget-tracker"
+dockerfile_path = "self-hosting/frontend/Dockerfile"
+pre_build.command = """
+  # Add multiple commands on new lines. Supports comments and escaped newlines.
+  sed -i 's|RUN npm run build|RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build|g' self-hosting/frontend/Dockerfile
+"""
+pre_build.shell_mode = false
+build_args = """
+  # VARIABLE = value
+"""
+
+##
+
+[[build]]
+name = "proxy"
+[build.config]
+builder = "oracle-2"
+git_account = "n1eko"
+repo = "ynuwenhof/koblas"
+image_registry = [{  }]
+
+##
+
+[[build]]
+name = "pzmonitor"
+[build.config]
+builder = "local"
+image_name = "pzmonitor"
+git_account = "n1eko"
+repo = "n1eko/pzmonitor"
+
+##
+
+[[build]]
+name = "zfs-exporter"
+[build.config]
+builder = "local"
+image_name = "zfs-exporter"
+git_account = "n1eko"
+repo = "n1eko/homelab"
+build_path = "builds/zfs-exporter"
+dockerfile_path = "Dockerfile"
+
+##
+
+[[procedure]]
+name = "Global Auto Update"
+description = "Pulls and auto updates Stacks and Deployments using 'poll_for_updates' or 'auto_update'."
+tags = ["system"]
+config.schedule = "Every day at 03:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
+]
+
+##
+
+[[builder]]
+name = "local"
+[builder.config]
+type = "Server"
+params.servers = ["homelab"]
+
+##
+
+[[builder]]
+name = "oracle-2"
+[builder.config]
+type = "Server"
+params.servers = ["oracle-2"]
+
+##
+
+[[resource_sync]]
+name = "resource-sync"
+[resource_sync.config]
+repo = "n1eko/homelab"
+git_account = "n1eko"
+resource_path = ["komodo/main.toml"]
+managed = true
