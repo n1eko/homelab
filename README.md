@@ -5,6 +5,8 @@ Docker Compose stacks for my homelab and two Oracle Cloud servers, deployed by
 
 - `stacks/<server>/<stack>/` - one Komodo stack per directory
 - `komodo/main.toml` - servers, stacks, builds and procedures (Komodo resource sync)
+- `builds/` - images built by Komodo
+- `stacks/oracle-1/ingress/` - Traefik, the public entry point for every `*.n1eko.com` service
 
 ## Secrets
 
@@ -25,3 +27,5 @@ Commits are scanned by [gitleaks](https://github.com/gitleaks/gitleaks) locally
 ```sh
 git config core.hooksPath .githooks
 ```
+
+See `CONTRIBUTING.md` for the workflow and commit conventions.
