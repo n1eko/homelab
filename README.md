@@ -19,9 +19,6 @@ secrets and conventions.
 
 ## What's running
 
-**Internet → Cloudflare → Traefik** on oracle-1 → **Tailscale** → homelab · oracle-2,
-all deployed by **Komodo** from this repo and kept up to date by **Renovate**.
-
 | | |
 |---|---|
 | 🎬 **Media** | Jellyfin · Sonarr · Radarr · Bazarr · Prowlarr · qBittorrent · Seerr · Calibre-Web · Homarr |
