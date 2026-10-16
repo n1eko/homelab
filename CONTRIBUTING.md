@@ -1,5 +1,32 @@
 # Contributing
 
+## Setup
+
+```sh
+git config core.hooksPath .githooks
+```
+
+The hooks enforce the commit format below and block secrets: gitleaks plus a local literal
+denylist (`.git/info/secret-denylist`, never committed). gitleaks also runs in CI.
+
+## Repository layout
+
+- `stacks/<server>/<stack>/` - one Komodo stack per directory
+- `komodo/main.toml` - servers, stacks, builds and procedures (Komodo resource sync)
+- `builds/` - images built by Komodo
+- `stacks/oracle-1/ingress/` - Traefik, the public entry point for every `*.n1eko.com` service
+
+## Secrets
+
+This repo is public: no secret lives in it. Compose files reference them as `${VAR}`; the value
+is a secret variable in Komodo, injected through the stack's `environment` in `komodo/main.toml`:
+
+```toml
+environment = """
+DB_PASSWORD=[[IMMICH_DB_PASSWORD]]
+"""
+```
+
 ## Workflow
 
 Every task has a GitHub issue, tracked in the **homelab** GitHub Project.
