@@ -1,0 +1,14 @@
+services:
+  cloudflare-ddns:
+    image: timothyjmiller/cloudflare-ddns:2.2.0
+    container_name: cloudflare-ddns
+    restart: always
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+    environment:
+      IP4_PROVIDER: ipify
+    volumes:
+      - /mnt/docker/ddns/config.json:/config.json:ro

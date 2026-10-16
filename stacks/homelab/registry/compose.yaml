@@ -1,0 +1,23 @@
+services:
+  registry:
+    image: registry:3.1.2
+    container_name: registry
+    restart: always
+    ports:
+      - "32080:5000"
+    volumes:
+      - /mnt/registry-data:/var/lib/registry
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+
+  gc:
+    image: registry:3.1.2
+    container_name: registry-gc
+    restart: always
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo '30 4 * * 0 registry garbage-collect --delete-untagged /etc/distribution/config.yml > /proc/1/fd/1 2>&1' | crontab -
+        exec crond -f -l 8
+    volumes:
+      - /mnt/registry-data:/var/lib/registry
