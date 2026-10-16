@@ -1,6 +1,7 @@
 services:
   koblas:
-    image: proxy:100.0.4
+    image: proxy:latest
+    pull_policy: never
     container_name: koblas
     restart: unless-stopped
     ports:
