@@ -6,6 +6,6 @@ services:
     env_file:
       - .env
     ports:
-      - 8095:80
+      - "10.0.0.16:8095:80"
     volumes:
       - /mnt/docker/vaultwarden/vw-data/:/data/
