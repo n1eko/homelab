@@ -40,6 +40,9 @@ server = "homelab"
 git_account = "n1eko"
 repo = "n1eko/homelab"
 run_directory = "stacks/homelab/backup"
+config_files = [
+  { path = "dump.sh", services = ["backup"], requires = "Restart" },
+]
 
 ##
 
@@ -135,6 +138,10 @@ run_directory = "stacks/oracle-1/ingress"
 environment = """
 INGRESS_BASIC_AUTH_USERS='[[INGRESS_BASIC_AUTH_USERS]]'
 """
+config_files = [
+  { path = "traefik.yml", services = ["traefik"], requires = "Restart" },
+  { path = "dynamic/routes.yml", requires = "None" },
+]
 
 ##
 
@@ -297,6 +304,10 @@ MONGODB_ROOT_PASSWORD=[[MONGODB_ROOT_PASSWORD]]
 SCHASSIS_R2_ACCESS_KEY=[[SCHASSIS_R2_ACCESS_KEY]]
 SCHASSIS_R2_SECRET_KEY=[[SCHASSIS_R2_SECRET_KEY]]
 """
+config_files = [
+  { path = "config/classifieds-api-v2.yml", services = ["classifieds-api-v2"], requires = "Restart" },
+  { path = "config/wallapop-scrapper.yml", requires = "None" },
+]
 
 ##
 
