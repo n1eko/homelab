@@ -1,0 +1,14 @@
+services:
+  traefik:
+    image: traefik:v3.7.14
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      BASIC_AUTH_USERS: ${INGRESS_BASIC_AUTH_USERS}
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - /mnt/docker/traefik/acme:/acme

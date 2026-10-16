@@ -1,0 +1,136 @@
+http:
+  routers:
+    http-to-https:
+      entryPoints: [web]
+      rule: "HostRegexp(`.+`)"
+      priority: 1
+      middlewares: [redirect-https]
+      service: noop@internal
+    classifieds-http:
+      entryPoints: [web]
+      rule: "Host(`classifieds-api-v2-schassis.n1eko.com`)"
+      service: classifieds
+    vault:
+      entryPoints: [websecure]
+      rule: "Host(`vault.n1eko.com`)"
+      service: vault
+      tls:
+        certResolver: letsencrypt
+    home:
+      entryPoints: [websecure]
+      rule: "Host(`home.n1eko.com`)"
+      middlewares: [cors]
+      service: home
+      tls:
+        certResolver: letsencrypt
+    mealie:
+      entryPoints: [websecure]
+      rule: "Host(`mealie.n1eko.com`)"
+      middlewares: [cors]
+      service: mealie
+      tls:
+        certResolver: letsencrypt
+    monitoring:
+      entryPoints: [websecure]
+      rule: "Host(`monitoring.n1eko.com`)"
+      middlewares: [basic-auth]
+      service: monitoring
+      tls:
+        certResolver: letsencrypt
+    photos:
+      entryPoints: [websecure]
+      rule: "Host(`photos.n1eko.com`)"
+      service: photos
+      tls:
+        certResolver: letsencrypt
+    race:
+      entryPoints: [websecure]
+      rule: "Host(`race.n1eko.com`)"
+      middlewares: [cors]
+      service: race
+      tls:
+        certResolver: letsencrypt
+    registry:
+      entryPoints: [websecure]
+      rule: "Host(`registry.n1eko.com`)"
+      middlewares: [basic-auth]
+      service: registry
+      tls:
+        certResolver: letsencrypt
+    classifieds:
+      entryPoints: [websecure]
+      rule: "Host(`classifieds-api-v2-schassis.n1eko.com`)"
+      service: classifieds
+      tls:
+        certResolver: letsencrypt
+    stream:
+      entryPoints: [websecure]
+      rule: "Host(`stream.n1eko.com`)"
+      service: stream
+      tls:
+        certResolver: letsencrypt
+    streamr:
+      entryPoints: [websecure]
+      rule: "Host(`streamr.n1eko.com`)"
+      service: streamr
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    basic-auth:
+      basicAuth:
+        users:
+          - '{{ env "BASIC_AUTH_USERS" }}'
+    cors:
+      headers:
+        customResponseHeaders:
+          Access-Control-Allow-Origin: "*"
+          Access-Control-Allow-Methods: "*"
+          Access-Control-Allow-Headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range"
+          Access-Control-Expose-Headers: "Content-Length,Content-Range"
+
+  services:
+    vault:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.16:8095"
+    home:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:8123"
+    mealie:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:9925"
+    monitoring:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.16:9090"
+    photos:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:2283"
+    race:
+      loadBalancer:
+        servers:
+          - url: "http://100.106.222.107:8772"
+    registry:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:32080"
+    classifieds:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:15201"
+    stream:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:8096"
+    streamr:
+      loadBalancer:
+        servers:
+          - url: "http://100.82.54.76:5055"

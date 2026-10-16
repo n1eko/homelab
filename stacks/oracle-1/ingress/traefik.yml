@@ -1,0 +1,26 @@
+log:
+  level: INFO
+accessLog: {}
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+    transport:
+      respondingTimeouts:
+        # v3 defaults to 60s, which breaks large Immich uploads and registry pushes.
+        readTimeout: 0
+
+providers:
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: contacto@n1eko.com
+      storage: /acme/acme.json
+      httpChallenge:
+        entryPoint: web
