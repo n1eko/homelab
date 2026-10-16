@@ -1,0 +1,33 @@
+services:
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.12.1
+    container_name: node_exporter
+    command:
+      - "--path.rootfs=/host"
+      - "--web.config.file=/etc/prometheus/web.yml"
+    ports:
+      - 9100:9100
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+      -  /mnt/docker/node_exporter/web.yml:/etc/prometheus/web.yml
+  sql_exporter:
+    image: ghcr.io/justwatchcom/sql_exporter:v0.9
+    container_name: sql_exporter
+    restart: unless-stopped
+    volumes:
+      - "/mnt/docker/sqlexporter/config.yml:/config/config.yml"
+    environment:
+      - CONFIG=/config/config.yml
+    ports:
+      - 9237:9237
+  pdc-agent:
+    image: grafana/pdc-agent:0.0.66
+    container_name: pdc-agent
+    restart: unless-stopped
+    command: -token ${GRAFANA_PDC_TOKEN} -cluster prod-eu-west-2 -gcloud-hosted-grafana-id 781424
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:

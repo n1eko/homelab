@@ -1,0 +1,58 @@
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    container_name: node-exporter
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  smartctl-exporter:
+    image: prometheuscommunity/smartctl-exporter:v0.15.0
+    privileged: true
+    user: root
+    ports:
+      - "9633:9633"
+    restart: unless-stopped
+  pzmonitor:
+    image: pzmonitor:latest
+    pull_policy: never
+    container_name: pzmonitor
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /mnt/docker/zomboid/data/Saves/Multiplayer/servertest1/players.db:/data/servertest1.db:ro
+    environment:
+      - PZMONITOR_RCON_HOST=127.0.0.1
+      - PZMONITOR_RCON_PORT=27015
+      - PZMONITOR_RCON_PASSWORD=${ZOMBOID_RCON_PASSWORD}
+      - PZMONITOR_LISTEN_ADDR=:9101
+      - PZMONITOR_LOG_LEVEL=info
+      - PZMONITOR_PLAYERS_DB=/data/servertest1.db
+  tapo-P110-exporter:
+    image: povilasid/p110-exporter:latest@sha256:2a6e033e0b75a99070c4691bc62c72da44411f0be058db39de11983bf6113ee3
+    volumes:
+       - /mnt/docker/prometheus-exporters/tapo.yaml:/app/tapo.yaml:ro
+    ports:
+      - 32512:9333
+    environment:
+      - TAPO_EMAIL=${TAPO_EMAIL}
+      - TAPO_PASSWORD=${TAPO_PASSWORD}
+      - PORT=9333
+    restart: unless-stopped
+  zfs-exporter:
+    image: zfs-exporter:latest
+    pull_policy: never
+    container_name: zfs-exporter
+    restart: unless-stopped
+    devices:
+      - /dev/zfs:/dev/zfs
+    ports:
+      - "9134:9134"

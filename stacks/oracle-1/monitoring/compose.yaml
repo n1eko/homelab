@@ -1,0 +1,58 @@
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    container_name: node-exporter
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  prometheus:
+    image: prom/prometheus:v3.15.0
+    container_name: prometheus
+    restart: unless-stopped
+    user: "1000:1000"
+    ports:
+      - "9090:9090"
+    volumes:
+      - /mnt/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /mnt/docker/prometheus/prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=60d'
+    links:
+      - postgres-exporter
+      - qbittorrent-exporter
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.20.1
+    ports:
+      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: "postgresql://n1eko:${SCHASSIS_POSTGRES_PASSWORD}@100.82.54.76:31800/postgres?sslmode=disable"
+    restart: unless-stopped
+  qbittorrent-exporter:
+      container_name: qbittorrent-exporter
+      restart: unless-stopped
+      environment:
+          - QBITTORRENT_API_KEY=${QBITTORRENT_API_KEY}
+          - 'QBITTORRENT_BASE_URL=http://100.82.54.76:32702'
+      ports:
+          - '8090:8090'
+      image: ghcr.io/martabal/qbittorrent-exporter:v2.0.3
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.10.0
+    restart: unless-stopped
+    command: ["--kafka.server=100.114.66.100:9092"]
+    ports:
+      - 9308:9308
