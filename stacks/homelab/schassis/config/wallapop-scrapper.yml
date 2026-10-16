@@ -1,0 +1,39 @@
+spring:
+  kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+    template:
+      default-topic: classifieds.scrapped.v2
+    bootstrap-servers: 100.114.66.100:9092
+    replication:
+      factor: '1'
+    schema:
+      registry-url: http://100.114.66.100:8081
+  application:
+    name: wallapop-scrapper
+  datasource:
+    driverClassName: org.h2.Driver
+    password: password
+    username: sa
+    url: jdbc:h2:mem:testdb
+  codec:
+    max-in-memory-size: 51200KB
+  batch:
+    initialize-schema: always
+    job:
+      enabled: 'false'
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+app:
+  scrapjobs:
+    datasource:
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://schassis-db:5432/postgres
+      username: n1eko
+      password: ${SCHASSIS_POSTGRES_PASSWORD}

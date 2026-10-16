@@ -1,0 +1,63 @@
+services:
+  schassis-db:
+    image: postgres:15.19
+    container_name: schassis-db
+    restart: always
+    environment:
+      POSTGRES_DB: schassis
+      POSTGRES_USER: n1eko
+      POSTGRES_PASSWORD: ${SCHASSIS_POSTGRES_PASSWORD}
+    ports:
+      - "31800:5432"
+    volumes:
+      - /mnt/schassis-data/postgredb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  classifieds-api-v2:
+    image: localhost:32080/schassis-rest-api:latest
+    pull_policy: always
+    container_name: schassis-classifieds-api-v2
+    restart: always
+    depends_on:
+      schassis-db:
+        condition: service_healthy
+    ports:
+      - "15201:15201"
+      - "31202:15202"
+    environment:
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=70.0 -XX:MaxMetaspaceSize=256m"
+      SCHASSIS_POSTGRES_PASSWORD: ${SCHASSIS_POSTGRES_PASSWORD}
+      MONGODB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
+      SCHASSIS_R2_ACCESS_KEY: ${SCHASSIS_R2_ACCESS_KEY}
+      SCHASSIS_R2_SECRET_KEY: ${SCHASSIS_R2_SECRET_KEY}
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1"
+    volumes:
+      - ./config/classifieds-api-v2.yml:/config/application.yml:ro
+
+  scheduler:
+    image: mcuadros/ofelia:0.3.22
+    container_name: schassis-scheduler
+    restart: always
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      ofelia.job-run.wallapop-scrapper.schedule: "0 0 */3 * * *"
+      ofelia.job-run.wallapop-scrapper.image: "localhost:32080/wallapop-scrapper-v2:latest"
+      ofelia.job-run.wallapop-scrapper.pull: "true"
+      ofelia.job-run.wallapop-scrapper.network: "schassis_default"
+      ofelia.job-run.wallapop-scrapper.volume: "/etc/komodo/stacks/schassis/stacks/homelab/schassis/config/wallapop-scrapper.yml:/config/application.yml:ro"
+      ofelia.job-run.wallapop-scrapper.environment: "SCHASSIS_POSTGRES_PASSWORD=${SCHASSIS_POSTGRES_PASSWORD}"
+
+  image-renewall:
+    image: localhost:32080/schassis-image-renewall:1.1.0
+    profiles: ["manual"]
+    restart: "no"
