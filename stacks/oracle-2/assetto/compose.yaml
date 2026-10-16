@@ -1,0 +1,20 @@
+services:
+  assetto-multiserver:
+    build: /home/ubuntu/assetto
+    image: assetto-assetto-multiserver
+    pull_policy: build
+    restart: always
+    stop_signal: SIGINT
+    entrypoint: ./assetto-multiserver-manager
+    ports:
+      - 8772:8772
+      - 9600:9600
+      - 9600:9600/udp
+      - 8081:8081
+    volumes:
+      - /home/ubuntu/assetto/servers.yml:/home/assetto/server-manager/servers.yml
+      - /home/ubuntu/assetto/config.yml:/home/assetto/server-manager/config.yml
+      - /home/ubuntu/assetto/assetto:/home/assetto/server-manager/assetto
+      - /home/ubuntu/assetto/servers:/home/assetto/server-manager/servers
+      - /home/ubuntu/assetto/shared_store.json:/home/assetto/server-manager/shared_store.json
+      - /home/ubuntu/assetto/ACSM.License:/home/assetto/server-manager/ACSM.License
