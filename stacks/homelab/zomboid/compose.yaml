@@ -1,0 +1,21 @@
+services:
+  zomboid:
+    image: danixu86/project-zomboid-dedicated-server:latest-release@sha256:c165eb74027339bb22bc9a39ae352aa616c1fdd6983c8ec76420b643f1acd456
+    container_name: zomboid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    env_file:
+      - .env
+    ports:
+      - "16261:16261/udp"
+      - "16262:16262/udp"
+      - "8766:8766/udp"
+      - "8767:8767/udp"
+      - "27015:27015/tcp"
+      - "16262-16268:16262-16268/tcp"
+    volumes:
+      - /mnt/docker/zomboid/data:/home/steam/Zomboid
+      - /mnt/docker/zomboid/workshop-mods:/home/steam/pz-dedicated/steamapps/workshop
