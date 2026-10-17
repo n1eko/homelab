@@ -1,6 +1,6 @@
 services:
   cloudflare-ddns:
-    image: timothyjmiller/cloudflare-ddns:2.2.0
+    image: timothyjmiller/cloudflare-ddns:2.3.0
     container_name: cloudflare-ddns
     restart: always
     network_mode: host
