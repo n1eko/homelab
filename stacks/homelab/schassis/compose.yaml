@@ -43,7 +43,7 @@ services:
       - ./config/classifieds-api-v2.yml:/config/application.yml:ro
 
   scheduler:
-    image: mcuadros/ofelia:0.3.22
+    image: mcuadros/ofelia:v3.0.8
     container_name: schassis-scheduler
     restart: always
     command: daemon --docker
