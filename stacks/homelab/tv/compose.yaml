@@ -32,7 +32,7 @@ services:
       interval: 15s
       retries: 3
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:12.2ubu2604-ls53
+    image: lscr.io/linuxserver/jellyfin:12.2ubu2604-ls54
     container_name: jellyfin
     group_add:
       - "109"
