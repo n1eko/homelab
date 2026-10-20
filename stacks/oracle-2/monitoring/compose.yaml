@@ -23,7 +23,7 @@ services:
     ports:
       - 9237:9237
   pdc-agent:
-    image: grafana/pdc-agent:0.0.66
+    image: grafana/pdc-agent:0.0.67
     container_name: pdc-agent
     restart: unless-stopped
     command: -token ${GRAFANA_PDC_TOKEN} -cluster prod-eu-west-2 -gcloud-hosted-grafana-id 781424
