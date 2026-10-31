@@ -1,7 +1,7 @@
 services:
   homarr:
     container_name: homarr
-    image: ghcr.io/homarr-labs/homarr:latest@sha256:1e077fc77d3ad7482376bab964b89cfc8c1f31fe2ddeb5154cf2a1058d40b32d
+    image: ghcr.io/homarr-labs/homarr:latest@sha256:2844201f11ce28b98183728dea2261de2b4fd8ed5480a4eef0b7977cc1a08dc0
     restart: unless-stopped
     environment:
       - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_ENCRYPTION_KEY}
