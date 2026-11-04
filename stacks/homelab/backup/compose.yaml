@@ -1,6 +1,6 @@
 services:
   backup:
-    image: docker:29.9.1-cli
+    image: docker:29.9.3-cli
     container_name: backup
     restart: always
     entrypoint: ["/bin/sh", "-c"]
