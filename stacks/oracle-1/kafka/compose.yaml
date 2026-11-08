@@ -1,6 +1,6 @@
 services:
   broker:
-    image: apache/kafka:4.3.1
+    image: apache/kafka:4.4.0
     hostname: broker
     container_name: broker
     restart: unless-stopped
