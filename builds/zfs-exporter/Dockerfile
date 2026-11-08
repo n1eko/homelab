@@ -15,7 +15,7 @@ RUN CGO_ENABLED=0 go build -trimpath -tags netgo \
 # --- Runtime stage ---
 # Ubuntu 24.04 so zfsutils-linux matches the host's ZFS version (2.2.x).
 # The exporter shells out to `zfs` and `zpool`, which talk to the host kernel via /dev/zfs.
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 RUN apt-get update \
  && apt-get install -y --no-install-recommends zfsutils-linux \
  && rm -rf /var/lib/apt/lists/*
