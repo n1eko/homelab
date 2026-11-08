@@ -38,8 +38,10 @@ Personal data (private e-mail addresses) stays out too.
 - Commits follow Conventional Commits (`feat(scope): ...`). Types, scopes and examples are in
   `CONTRIBUTING.md`.
 - No comments in compose files.
-- Changing `main.toml` needs a resource sync in Komodo; changing a compose file needs a redeploy
-  of that stack (Renovate bumps are not deployed automatically yet, see #21).
+- Pushes to `main` are applied by the hourly Komodo procedure `Deploy repo changes`: it runs the
+  resource sync, then redeploys every stack whose files changed (Renovate merges included). Run it
+  by hand from Komodo to apply sooner; a failed pull leaves the stack on its old version until a
+  later run succeeds.
 
 ## Structure
 
