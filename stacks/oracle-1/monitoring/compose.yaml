@@ -51,7 +51,7 @@ services:
           - '8090:8090'
       image: ghcr.io/martabal/qbittorrent-exporter:v2.0.4
   kafka-exporter:
-    image: danielqsj/kafka-exporter:v1.10.0
+    image: danielqsj/kafka-exporter:v1.11.0
     restart: unless-stopped
     command: ["--kafka.server=100.114.66.100:9092"]
     ports:
