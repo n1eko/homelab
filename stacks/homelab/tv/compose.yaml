@@ -150,7 +150,7 @@ services:
       - media-network
 
   shelfmark:
-    image: ghcr.io/calibrain/shelfmark:v1.6.1
+    image: ghcr.io/calibrain/shelfmark:v1.7.0
     container_name: shelfmark
     environment:
       - PUID=1000
