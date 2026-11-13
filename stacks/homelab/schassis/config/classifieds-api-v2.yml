@@ -26,6 +26,10 @@ spring:
     locations: classpath:db/migration
   kafka:
     bootstrap-servers: 100.114.66.100:9092
+  task:
+    scheduling:
+      pool:
+        size: 4
 logging:
   level:
     org:
@@ -43,6 +47,8 @@ similarity:
     enabled: 'false'
 classifieds:
   excluded-dealers: autohero,flexicar,ocasionplus,integral motion,integralmotion
+  ingestion:
+    seen-refresh: 6h
 inference:
   host: 100.106.222.107
   port: '8000'
@@ -81,8 +87,13 @@ scheduler:
     cron: '0 0 */10 * * *'
   retry-images:
     cron: '0 */10 * * * *'
+    batch-size: '500'
+    min-age: 15m
+    failed:
+      every: 1d
+      for: 7d
   clean-brands-and-models:
-    cron: '0 0 */10 * * *'
+    cron: '0 30 */10 * * *'
   recheck:
     cron: '0 0 * * * *'
     batch-size: '200'
