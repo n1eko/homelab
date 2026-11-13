@@ -1,6 +1,6 @@
 services:
   schassis-db:
-    image: postgres:15.19
+    image: postgres:15.20
     container_name: schassis-db
     restart: always
     environment:
