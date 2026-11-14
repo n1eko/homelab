@@ -1,11 +1,6 @@
 spring:
-  # Boot 4 reads spring.mongodb.uri; spring.data.mongodb.uri is for the release before it.
-  # Drop the old key once the Boot 4 image is running.
   mongodb:
     uri: mongodb://n1eko:${MONGODB_ROOT_PASSWORD}@100.114.66.100:27017/classifieds?authSource=admin
-  data:
-    mongodb:
-      uri: mongodb://n1eko:${MONGODB_ROOT_PASSWORD}@100.114.66.100:27017/classifieds?authSource=admin
   datasource:
     username: n1eko
     hikari:
