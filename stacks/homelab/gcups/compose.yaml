@@ -14,7 +14,7 @@ services:
       - "c 189:* rmw"
 
   gcups-exporter:
-    image: ghcr.io/n1eko/gcups/exporter:latest@sha256:9c6ba93f846511d728a797553f1caea6e4343dab405cc5009622261fbce00fcd
+    image: ghcr.io/n1eko/gcups/exporter:latest@sha256:9bc536124a57a8bc5b864c968a78204269488284ec3a0bc40df11311c7997901
     container_name: gcups-exporter
     restart: unless-stopped
     ports:
